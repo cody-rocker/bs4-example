@@ -123,7 +123,7 @@ def parse_args():
         parameters
     """
     args = {'debug': DEBUG, 'verbose': VERBOSE, 'query': None}
-    
+
     for argument in sys.argv:
         if argument in ['-d', '--debug']: args['debug'] = True
         if argument in ['-vv', '--verbose']: args['verbose'] = True
@@ -131,8 +131,6 @@ def parse_args():
         if argument.startswith('-q=') or argument.startswith('--query='):
             tmp = argument.split('=')[1].replace('"', '')
             args['query'] = urllib.quote_plus(tmp)
-
-    Log.verbose('parse_args', 'args={}'.format(args))
 
     return args
 
@@ -195,9 +193,10 @@ def parse_feed_to_dict(feed, _dict=None):
 
     results[section_label.text] = parse_videos_to_list(feed)
 
+    video_count = len(results[section_label.text])
     Log.debug('parse_feed_to_dict', '{} scraped successfully'.format(
-        section_label.text) if len(videos) == 15 \
-        else '{} result(s) for {}'.format(len(videos), section_label.text))
+        section_label.text) if video_count == 15 \
+        else '{} result(s) for {}'.format(video_count, section_label.text))
 
     return results
 
@@ -263,11 +262,13 @@ if __name__ == '__main__':
     VERBOSE = args['verbose']
     if VERBOSE: Log.debug(__name__, 'verbose output enabled')
 
+    Log.verbose(__name__, 'args={}'.format(args))
+
     query = args['query']
 
     # perform script operation
     show_results(
-        scrape_homepage() if query is None else \
+        scrape_homepage() if query else \
         scrape_query_results(query)
         )
 
