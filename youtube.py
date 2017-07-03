@@ -67,7 +67,7 @@ class UserAgent:
         elif len(UA_LIST) > 1:
             selected_ua = UA_LIST[random.randint(0, len(UA_LIST) - 1)]
             Log.debug('UserAgent.get_random', '"{}"'.format(
-                selected_ua if len(selected_ua) <= 64 else \
+                selected_ua if len(selected_ua) <= 64 or VERBOSE else \
                 selected_ua[:61] + '...'))
             return selected_ua
         else:
@@ -87,8 +87,8 @@ class Entity(object):
     def __str__(self):
         """ Simple string representation
         """
-        return '{:24}: <{}/watch?v={}>'.format(
-            self.title if len(self.title) <= 24 else self.title[:21] + '...', 
+        return '{:32}: <{}/watch?v={}>'.format(
+            self.title if len(self.title) <= 32 else self.title[:29] + '...', 
             BASE_URL, self.src)
 
     def __eq__(self, obj):
@@ -268,7 +268,7 @@ if __name__ == '__main__':
 
     # perform script operation
     show_results(
-        scrape_homepage() if query else \
+        scrape_homepage() if query is None else \
         scrape_query_results(query)
         )
 
